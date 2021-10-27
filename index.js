@@ -42,6 +42,29 @@ async function run() {
       const service = await serviceCollection.findOne(query);
       res.send(service);
     });
+    //PUT API
+    app.put("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const service = req.body;
+      console.log("hitting update");
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateService = {
+        $set: {
+          name: service.name,
+          price: service.price,
+          image: service.image,
+          description: service.description,
+        },
+      };
+      const result = await serviceCollection.updateOne(
+        filter,
+        updateService,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
     // how to send data from client to database through server
     //we have to call the POST API to HIT that else no data would enter,and when it comes from UI than it hit the post
     //POSTAPI
